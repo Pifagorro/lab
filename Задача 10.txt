@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <string.h>
+#include <malloc.h>
+#include <windows.h>
+ 
+char *Rulett = "ÀÁÂÃÄÅ¨ÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞß";
+ 
+char bufRus[256];
+ 
+char* Rus(const char* text) {
+      CharToOem(text, bufRus);
+      return bufRus;
+      }
+ 
+void backTrack(char *Inp, char *Out)
+{
+    int li,lo,k,p;
+    char *O1,*O2;
+ 
+    li=strlen(Inp);
+ 
+    if (li==0) 
+    {
+        printf("%s\n",Rus(Out));
+        return;
+    }
+ 
+    lo=strlen(Out);
+ 
+    O1=(char *) calloc((lo+2),1);
+    strcpy(O1,Out);
+ 
+    k=(Inp[0]-'0')-1;
+    O1[lo]=Rulett[k];
+ 
+    backTrack(Inp+1,O1);
+    free(O1);
+ 
+    if (li >= 2)
+    {
+        k=(Inp[0]-'0')*10+(Inp[1]-'0')-1;
+ 
+        O2=(char *) calloc(lo+2,1);
+        strcpy(O2,Out);
+        O2[lo]=Rulett[k];
+ 
+        backTrack(Inp+2,O2);
+        free(O2);
+    }
+ 
+}
+ 
+int main(int argc, char* argv[])
+{
+    char *Start;
+    char *S1="211221";
+    char *S2="21221";
+ 
+    Start=(char *) calloc(1,1);
+    Start[0]=0;
+ 
+    backTrack(S1,Start);
+    free(Start);
+ 
+    printf("-----------------\n");
+ 
+    Start=(char *) calloc(1,1);
+    Start[0]=0;
+ 
+    backTrack(S2,Start);
+    free(Start);
+    return 0;
+}
